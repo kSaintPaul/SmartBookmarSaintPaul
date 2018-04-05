@@ -5,6 +5,7 @@ public class Book {
     public String Text;
     public String Author;
     public String genre;
+    public int AuthorId;
 
     public Book() {
     }
@@ -14,5 +15,13 @@ public class Book {
         Text = text;
         Author = author;
         this.genre = genre;
+    }
+
+    public Book(int id, String text, String author, String genre, int authorId) {
+        Id = id;
+        Text = text;
+        Author = author;
+        this.genre = genre;
+        AuthorId = authorId;
     }
 }

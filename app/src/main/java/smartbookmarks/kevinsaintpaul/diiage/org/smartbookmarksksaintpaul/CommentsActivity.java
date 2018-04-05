@@ -23,7 +23,7 @@ public class CommentsActivity extends AppCompatActivity {
 
     ListView listComments;
 
-    ArrayList<Comment> comments;
+    ArrayList<CommentWithNameBook> comments;
     SQLiteDatabase db;
 
 
@@ -33,6 +33,8 @@ public class CommentsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_comments);
 
         listComments = findViewById(R.id.lvComments);
+
+        comments = new ArrayList<>();
 
         //Get Comments in Db
         InitComments();
@@ -51,7 +53,7 @@ public class CommentsActivity extends AppCompatActivity {
         DbHelper helper = new DbHelper(this);
         db = helper.getWritableDatabase();
 
-        Cursor cursor = db.query(DbHelper.TableComment,
+        Cursor commentsCursor = db.query(DbHelper.TableComment,
                 new String[]{"id","bookId","page","comment", "date"},
                 null,
                 null,
@@ -59,16 +61,28 @@ public class CommentsActivity extends AppCompatActivity {
                 null,
                 "date DESC");
 
-        Comment comment;
+        CommentWithNameBook comment;
 
-        while(cursor.moveToNext()){
-            comment = new Comment();
+        while(commentsCursor.moveToNext()){
+            comment = new CommentWithNameBook();
 
-            comment.Id = cursor.getInt(0);
-            comment.IdBook = cursor.getInt(1);
-            comment.Page = cursor.getInt(2);
-            comment.Comment = cursor.getString(3);
-            comment.Date = new Date(cursor.getLong(4) * 1000);
+            comment.Comment.Id = commentsCursor.getInt(0);
+            comment.Comment.IdBook = commentsCursor.getInt(1);
+            comment.Comment.Page = commentsCursor.getInt(2);
+            comment.Comment.Comment = commentsCursor.getString(3);
+            comment.Comment.Date = new Date(commentsCursor.getLong(4) * 1000);
+
+            Cursor bookCursor = db.query(DbHelper.TableBook,
+                    new String[]{"title"},
+                    "id = ?",
+                    new String[]{String.valueOf(comment.Comment.IdBook)},
+                    null ,
+                    null,
+                    "date DESC");
+
+            while(bookCursor.moveToNext()){
+                comment.NameBook = bookCursor.getString(0);
+            }
 
             comments.add(comment);
         }
@@ -77,10 +91,10 @@ public class CommentsActivity extends AppCompatActivity {
     private static class CommentAdapter extends BaseAdapter {
 
         Activity context;
-        ArrayList<Comment> comments;
+        ArrayList<CommentWithNameBook> comments;
         CommentViewHolder commentViewHolder;
 
-        public CommentAdapter(Activity context, ArrayList<Comment> comments) {
+        public CommentAdapter(Activity context, ArrayList<CommentWithNameBook> comments) {
             this.context = context;
             this.comments = comments;
         }
@@ -122,12 +136,12 @@ public class CommentsActivity extends AppCompatActivity {
                 v.setTag(commentViewHolder);
             }
 
-            Comment comment = comments.get(position);
+            CommentWithNameBook comment = comments.get(position);
 
-            commentViewHolder.Comment.setText(comment.Comment);
-            commentViewHolder.BookTitle.setText(comment.IdBook);
-            commentViewHolder.PageNumber.setText(comment.Page);
-            commentViewHolder.DateComment.setText(comment.Date.toString());
+            commentViewHolder.Comment.setText(comment.Comment.Comment);
+            commentViewHolder.BookTitle.setText(comment.NameBook);
+            commentViewHolder.PageNumber.setText(comment.Comment.Page);
+            commentViewHolder.DateComment.setText(comment.Comment.Date.toString());
 
             return v;
         }
@@ -148,5 +162,13 @@ public class CommentsActivity extends AppCompatActivity {
         }
     }
 
+    private class CommentWithNameBook{
+        public Comment Comment;
+        public String NameBook;
+
+        public CommentWithNameBook() {
+            Comment = new Comment();
+        }
+    }
 
 }

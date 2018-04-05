@@ -2,7 +2,7 @@ package Model;
 
 public class Book {
     public int Id;
-    public String Text;
+    public String Title;
     public String Author;
     public String genre;
     public int AuthorId;
@@ -12,14 +12,14 @@ public class Book {
 
     public Book(int id, String text, String author, String genre) {
         Id = id;
-        Text = text;
+        Title = text;
         Author = author;
         this.genre = genre;
     }
 
     public Book(int id, String text, String author, String genre, int authorId) {
         Id = id;
-        Text = text;
+        Title = text;
         Author = author;
         this.genre = genre;
         AuthorId = authorId;

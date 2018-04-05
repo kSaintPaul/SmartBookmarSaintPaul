@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">SmartBookmarksKSaintPaul</string>
+    <string name="MyCommentaryText">Mes commentaires</string>
+    <string name="AddCommentaryText">Ajouter un commentaire</string>
 </resources>

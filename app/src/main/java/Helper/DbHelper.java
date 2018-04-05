@@ -11,6 +11,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     public static String TableComment = "Comment";
     public static String TableBook = "Book";
+    public static String TableAuthor = "Authors";
 
     public DbHelper(Context context) {
         super(context, NameDb, null, 1);
@@ -43,7 +44,13 @@ public class DbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        db.execSQL("CREATE TABLE "+ TableAuthor +" (" +
+                "id  PRIMARY KEY AUTOINCREMENT NOT NULL , " +
+                "nom INTEGER  NOT NULL, " +
+                "dateNaiss DATETIMLE NOT NULL)"
+        );
 
+        db.execSQL("ALTER TABLE "+ TableBook +" ADD COLUMN authorId INTEGER");
     }
 
     @Override

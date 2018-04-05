@@ -34,8 +34,6 @@ public class MainActivity extends AppCompatActivity {
         txtStats = findViewById(R.id.txtStats);
 
         InitTxtStats();
-
-
     }
 
     private void InitTxtStats() {
